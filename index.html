@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.icecomm.io/icecomm.js"></script>
+
+
+    <style type="text/css">
+        body {
+            margin-top: 0px;
+            margin-bottom: 0px;
+            margin-left: 0px;
+            margin-right: 0px;
+            padding: 0;
+            color: black;
+            font-size: 10pt;
+            font-family: "Trebuchet MS", sans-serif;
+            background-color: #E2E2E2;
+        }
+        video {
+             flex-grow: 1;
+            flex-shrink: 0;
+            min-width: 25vw;
+            min-height: auto;
+            max-width: 75vw;
+            margin: auto;
+            border-style: solid;
+            border-color: #0000ff;
+            background-color: gray;
+            flex-basis: 0;
+            flex: auto;
+            align-self: stretch;
+        }
+        .flexitem{
+            flex-grow: 1;
+            flex-shrink: 0;
+            min-width: 25vw;
+            min-height: auto;
+            max-width: 75vw;
+            margin: auto;
+            border-style: solid;
+            border-color: #0000ff;
+            background-color: gray;
+            flex-basis: 0;
+            flex: auto;
+            align-self: stretch;
+        }
+        #wrapper {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            background-color: black;
+            flex-flow: wrap;
+            align-items:stretch;
+            border-style: solid;
+            border-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+
+        <video id="localVideo" autoplay></video>
+    </div>
+
+
+    <script type="text/javascript">
+        var hash;
+        if (window.location.hash) {
+
+            hash = window.location.hash.substring(1);
+        }
+        else {
+
+            hash = 'george';
+        }
+
+        var comm = new Icecomm('hkv0trIP4MVN4kCuoxOqntfhwvfe6HQDCePxgRSMlKB9RsLFFG');
+
+        comm.connect(hash, {
+            audio: true,
+            limit: 24
+        });
+
+
+
+
+        comm.on('connected', function(options) {
+            createRemoteVideo(options.stream, options.callerID);
+            console.log(comm.getRoomSize());
+        });
+
+        comm.on('local', function(options) {
+            localVideo.src = options.stream;
+        });
+
+        comm.on('disconnect', function(options) {
+            document.getElementById(options.callerID).remove();
+        });
+
+        function createRemoteVideo(stream, key) {
+            
+            var remoteVideo = document.createElement('video');
+            remoteVideo.src = stream;
+            remoteVideo.id = key;
+            remoteVideo.autoplay = true;
+            document.getElementById("wrapper").appendChild(remoteVideo);
+        }
+    </script>
+</body>
+
+</html>
